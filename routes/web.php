@@ -16,17 +16,17 @@ Route::get('/', function () {
 Route::get('/admin/dashboard', function () {
     $users = \App\Models\Vartotojas::whereIn('role', ['darbuotojas', 'administratorius'])->get();
     return view('/admin/dashboard', compact('users'));
-})->middleware('role.redirect');
+})->middleware('check.admin');
 
 Route::get('/customer/dashboard', function () {
     $insurancePolicies = \App\Models\DraudimoPolisas::all();
     $years = Auth::user()->getYearsSinceLastAccident();
     return view('customer.dashboard', compact(['insurancePolicies', 'years']));
-})->middleware('role.redirect');
+})->middleware('check.customer');
 
 Route::get('/worker/dashboard', function () {
     return view('worker.dashboard');
-})->middleware('role.redirect');
+})->middleware('check.worker');
 
 Route::post('/register-user', [UserController::class, 'register']);
 Route::post('/logout', [UserController::class, 'logout']);
