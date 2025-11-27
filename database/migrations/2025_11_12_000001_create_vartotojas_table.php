@@ -20,7 +20,8 @@ return new class extends Migration
             $table->enum('role', ['administratorius', 'darbuotojas', 'klientas'])
                 ->default('klientas');
             $table->string('pakvietimo_kodas')->unique()->nullable();
-            $table->string('sukurusio_admin_id')->nullable();
+            $table->integer('lojalumo_metai')->nullable();
+            $table->boolean('uzblokuotas')->default(false);
             $table->date('paskutinio_incidento_data')->nullable();
             $table->timestamps();
         });

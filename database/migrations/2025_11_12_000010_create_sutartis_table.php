@@ -30,8 +30,8 @@ return new class extends Migration
                 ->onDelete('set null');
 
             // New FK: each contract must belong to a draudimo_polisas
-            $table->foreignId('draudimo_polisas_id')
-                ->constrained('draudimo_polisas')
+            $table->foreignId('paketas_id')
+                ->constrained('paketas')
                 ->onDelete('cascade');
 
             $table->timestamps();
