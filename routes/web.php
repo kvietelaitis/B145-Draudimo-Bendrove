@@ -24,6 +24,10 @@ Route::get('/customer/dashboard', function () {
     return view('customer.dashboard', compact(['insurancePolicies', 'years']));
 })->middleware('check.customer');
 
+Route::get('/accident_form', function () {
+    return view('/customer/accident_form');
+})->middleware('check.customer')->name('accident_form');
+
 Route::get('/worker/dashboard', function () {
     return view('worker.dashboard');
 })->middleware('check.worker');

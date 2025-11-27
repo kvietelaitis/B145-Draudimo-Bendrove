@@ -17,24 +17,31 @@
             <h1 class="text-4xl font-semibold">Draudimas.lt</h1>
         </div>
 
-        <form action="/logout" method="POST">
-            @csrf
-            <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">Log
-                out</button>
-        </form>
+        <div class="flex items-center space-x-4">
+            <a href="{{route('accident_form')}}"
+                class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition">
+                Registruoti įvykį
+            </a>
+
+            <form action="/logout" method="POST">
+                @csrf
+                <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">
+                    Atsijungti
+                </button>
+            </form>
+        </div>
 
     </header>
     <!-- Insurance Policies -->
-    <div class="space-y-6">
+    <div class="space-y-6 px-60">
         <h2 class="text-2xl font-medium">Draudimo Polisai:</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 gap-6">
             @foreach($insurancePolicies as $insurancePolicy)
             <div
                 class="border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition bg-white flex flex-col justify-between">
                 <div class="mb-4">
                     <h3 class="text-lg font-semibold mb-2">{{ $insurancePolicy->pavadinimas }}</h3>
                     <p class="text-gray-600 mb-2">{{ $insurancePolicy->apibudinimas }}</p>
-                    <p class="font-medium mb-2">Bazinė kaina: €{{ $insurancePolicy->bazine_kaina }}</p>
                     @if(!empty($insurancePolicy->salygos['apima']))
                     <p class="text-sm text-gray-500">Privalumai: {{ implode(', ', $insurancePolicy->salygos['apima']) }}
                     </p>
@@ -112,16 +119,6 @@
         </div>
 
         <div id="errorResult" class="hidden mt-4 text-red-600"></div>
-    </div>
-
-    <!-- Event Declaration -->
-    <div class="border border-gray-200 rounded-lg p-6 shadow-sm">
-        <h2 class="text-2xl font-medium mb-4">Registruoti įvykį</h2>
-        <form id="event-declaration" action="/declare-event" method="POST">
-            @csrf
-            <button type="submit"
-                class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition">Registruoti</button>
-        </form>
     </div>
 
     <script>
