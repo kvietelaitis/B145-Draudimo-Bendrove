@@ -16,7 +16,8 @@ class EnsureUserIsWorker
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Auth::user() || Auth::user()->role !== 'darbuotojas') {
+        if (!Auth::user() || Auth::user()->role !== 'darbuotojas' || Auth::user()->uzblokuotas == 1) {
+            Auth::logout();
             abort(403, 'FORBIDDEN');
         }
 

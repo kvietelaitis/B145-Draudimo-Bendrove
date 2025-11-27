@@ -83,6 +83,10 @@
                                 class="delete-button bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">
                                 Pašalinti
                             </button>
+                            <button
+                                class="block-button bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">
+                                {{ $user->uzblokuotas == 0 ? "Užblokuoti" : "Atblokuoti"}}
+                            </button>
                         </div>
                     </td>
                 </tr>
@@ -123,6 +127,7 @@
                     if (data.status == 1) {
                         alert(`Darbuotojas sukurtas. Vienkartinis slaptažodis: ${data.pass}`);
                         this.reset();
+                        page.reload();
                     }
                     else {
                         alert(data.msg || "Klaida kuriant darbuotoją.");
@@ -182,6 +187,53 @@
                     alert('An error occurred while deleting the user');
                     this.disabled = false;
                     this.textContent = 'Delete';
+                });
+            });
+        });
+
+        document.querySelectorAll('.block-button').forEach(button => {
+            button.addEventListener('click', function () {
+                // Add confirmation
+                if (!confirm('Ar jūs tikrai norite užblokuoti šio vartotojo paskyrą?')) {
+                    return;
+                }
+
+                const row = this.closest('tr');
+                const userId = row.querySelector('.user-id').textContent;
+                const userName = row.querySelector('.user-name').textContent;
+
+                // Disable button during request
+                this.disabled = true;
+                this.textContent = 'Blokuojamas...';
+
+                fetch('/block-worker', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ id: userId }) // Only send ID
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status == 1) {
+                        this.textContent = this.textContent === 'Užblokuoti' ? 'Atblokuoti' : 'Užblokuoti';
+                        this.disabled = false;
+
+                        // Optional: Show success message
+                        alert(`Vartotojas ${userName} sėkmingai užblokuotas`);
+                    } else {
+                        alert(data.msg || 'Failed to delete user');
+                        // Re-enable button on error
+                        this.disabled = false;
+                        this.textContent = 'Užblokuoti';
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Ištiko klaida blokuojant vartotoją');
+                    this.disabled = false;
+                    this.textContent = 'Užblokuoti';
                 });
             });
         });

@@ -16,7 +16,8 @@ class EnsureUserIsAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Auth::user() || Auth::user()->role !== 'administratorius') {
+        if (!Auth::user() || Auth::user()->role !== 'administratorius' || Auth::user()->uzblokuotas == 1) {
+            Auth::logout();
             abort(403, 'FORBIDDEN');
         }
 

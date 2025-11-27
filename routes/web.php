@@ -35,6 +35,7 @@ Route::post('/register_worker', [AdminUserController::class, 'createWorker']);
 Route::post('/remove-worker', [AdminUserController::class, 'removeWorker']);
 Route::post('/calculate-lease', [LeaseCalculatorController::class, 'calculate']);
 Route::post('/declare-event', [UserController::class, 'reportAccident']);
+Route::post('/block-worker', [AdminUserController::class, 'blockWorker']);
 Route::post('/choose-policy', function () {
     return view('wip');
 });

@@ -90,4 +90,41 @@ class AdminUserController extends Controller
 
         return response()->json($data);
     }
+
+    public function blockWorker(Request $request)
+    {
+        if (!$request->user() || $request->user()->role !== 'administratorius') {
+            return response()->json([
+                'status' => 0,
+                'msg' => "Unauthorized",
+            ], 403);
+        }
+
+        $data = $request->all();
+
+        if ($data['id'] == 1 || $data['id'] == $request->user()->id) {
+            $data = [
+                'status' => '0',
+                'msg' => 'Negalima užblokuoti šios paskyros.'
+            ];
+        } else {
+            $toBlock = Vartotojas::find($data['id'])->uzblokuotas == 0 ? 1 : 0;
+
+            $res = Vartotojas::where('id', $data['id'])->update(['uzblokuotas' => $toBlock]);
+
+            if ($res) {
+                $data = [
+                    'status' => '1',
+                    'msg' => 'success'
+                ];
+            } else {
+                $data = [
+                    'status' => '0',
+                    'msg' => 'Nepavyko užblokuoti paskyros.'
+                ];
+            }
+        }
+
+        return response()->json($data);
+    }
 }
