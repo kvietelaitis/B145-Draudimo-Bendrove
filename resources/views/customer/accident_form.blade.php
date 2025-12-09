@@ -12,5 +12,16 @@
 </head>
 
 <body class="bg-white text-gray-800 font-sans min-h-screen p-8">
+    <h2 class="text-2xl font-medium pb-5">Registruoti įvykį:</h2>
 
+    <div class="border border-gray-200 rounded-lg p-6 shadow-sm space-y-4">
+        <form id="accident-registration-form" class="space-y-4">
+            @csrf
+            <div>
+                <label class="block-mb-1 font-medium" for="insurance_contract">
+                    Pasirinkitę sutartį
+                </label>
+            </div>
+        </form>
+    </div>
 </body>
