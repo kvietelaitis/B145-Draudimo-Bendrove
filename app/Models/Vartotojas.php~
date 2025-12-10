@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Vartotojas extends Authenticatable
+class Vartotojas extends Model
 {
     use HasFactory;
 
@@ -35,23 +34,6 @@ class Vartotojas extends Authenticatable
         'uzblokuotas' => 'boolean',
         'paskutinio_incidento_data' => 'date',
     ];
-
-    public function getAuthPassword()
-    {
-        return $this->slaptazodis;
-    }
-
-    public function getAuthIdentifierName()
-    {
-        return 'el_pastas';
-    }
-
-    public function getYearsSinceLastAccident()
-    {
-        $data = $this->paskutinio_incidento_data ?: $this->created_at;
-
-        return Carbon::parse($data)->diffInYears(now());
-    }
 
     public function ivykiai(): HasMany
     {
@@ -82,19 +64,6 @@ class Vartotojas extends Authenticatable
     {
         return $this->hasMany(Sutartis::class, 'sudaro_id');
     }
-
-    public function isKlientas()
-    {
-        return $this->role === 'klientas';
-    }
-
-    public function isDarbuotojas()
-    {
-        return $this->role === 'darbuotojas';
-    }
-
-    public function isAdmin()
-    {
-        return $this->role === 'administratorius';
-    }
 }
+
+>

@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Sutartis extends Model
 {
+    use HasFactory;
+
     protected $table = 'sutartis';
 
     protected $fillable = [
@@ -14,64 +18,29 @@ class Sutartis extends Model
         'galiojimo_pabaigos_data',
         'bukle',
         'pasiraso_id',
-        'sudaro_id'
+        'sudaro_id',
+        'paketas_id',
     ];
 
     protected $casts = [
+        'galutine_kaina' => 'double',
         'isigaliojimo_data' => 'date',
         'galiojimo_pabaigos_data' => 'date',
-        'galutine_kaina' => 'double',
+        'bukle' => 'string',
     ];
 
-    // Relationships
-    public function pasirasoVartotojas()
+    public function pasiraso(): BelongsTo
     {
         return $this->belongsTo(Vartotojas::class, 'pasiraso_id');
     }
 
-    public function sudaroVartotojas()
+    public function sudaro(): BelongsTo
     {
         return $this->belongsTo(Vartotojas::class, 'sudaro_id');
     }
 
-    public function draudimoPolisas()
+    public function paketas(): BelongsTo
     {
-        return $this->belongsTo(DraudimoPolisas::class, 'draudimo_polisas_id');
-    }
-
-    // Helper methods
-    public function isKuriamas()
-    {
-        return $this->bukle === 'kuriamas';
-    }
-
-    public function isIssiustas()
-    {
-        return $this->bukle === 'issiustas';
-    }
-
-    public function isPriimtas()
-    {
-        return $this->bukle === 'priimtas';
-    }
-
-    public function isAtmestas()
-    {
-        return $this->bukle === 'atmestas';
-    }
-
-    public function isActive()
-    {
-        return $this->bukle === 'aktyvi' && $this->galiojimo_pabaigos_data >= now();
-    }
-
-    public function isPasibaigus()
-    {
-        return $this->bukle === 'pasibaigus';
-    }
-
-    public function isAtsaukta()
-    {
-        return $this->bukle === 'atsaukta';
+        return $this->belongsTo(Paketas::class, 'paketas_id');
     }
 }

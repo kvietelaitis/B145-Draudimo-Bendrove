@@ -2,24 +2,20 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class IvykioTipas extends Model
 {
-    use HasFactory;
-
     protected $table = 'ivykio_tipas';
 
     public $timestamps = false;
 
     protected $fillable = [
         'pavadinimas',
-        'apibudinimas',
+        'apibudinimas'
     ];
 
-    public function ivykiai(): HasMany
+    public function ivykiai()
     {
         return $this->hasMany(Ivykis::class, 'tipas_id');
     }

@@ -21,6 +21,7 @@
                 <label class="block-mb-1 font-medium" for="insurance_contract">
                     Pasirinkitę sutartį
                 </label>
+
             </div>
         </form>
     </div>

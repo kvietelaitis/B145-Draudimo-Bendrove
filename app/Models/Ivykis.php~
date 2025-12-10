@@ -2,15 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Ivykis extends Model
 {
-    use HasFactory;
-
     protected $table = 'ivykis';
 
     public $timestamps = false;
@@ -21,26 +16,25 @@ class Ivykis extends Model
         'bukle',
         'apibudinimas',
         'tipas_id',
-        'vartotojas_id',
+        'vartotojas_id'
     ];
 
     protected $casts = [
         'ivykio_data' => 'date',
         'pranesimo_data' => 'date',
-        'bukle' => 'string',
     ];
 
-    public function tipas(): BelongsTo
+    public function tipas()
     {
         return $this->belongsTo(IvykioTipas::class, 'tipas_id');
     }
 
-    public function vartotojas(): BelongsTo
+    public function vartotojas()
     {
         return $this->belongsTo(Vartotojas::class, 'vartotojas_id');
     }
 
-    public function nuotraukos(): HasMany
+    public function nuotraukos()
     {
         return $this->hasMany(IvykioNuotrauka::class, 'ivykis_id');
     }

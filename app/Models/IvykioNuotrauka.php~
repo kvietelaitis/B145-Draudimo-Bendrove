@@ -2,14 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class IvykioNuotrauka extends Model
 {
-    use HasFactory;
-
     protected $table = 'ivykio_nuotrauka';
 
     public $timestamps = false;
@@ -17,10 +13,10 @@ class IvykioNuotrauka extends Model
     protected $fillable = [
         'failo_vieta',
         'failo_pavadinimas',
-        'ivykis_id',
+        'ivykis_id'
     ];
 
-    public function ivykis(): BelongsTo
+    public function ivykis()
     {
         return $this->belongsTo(Ivykis::class, 'ivykis_id');
     }

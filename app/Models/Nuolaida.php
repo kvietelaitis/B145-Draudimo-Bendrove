@@ -2,58 +2,31 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Nuolaida extends Model
 {
+    use HasFactory;
+
     protected $table = 'nuolaida';
 
     protected $fillable = [
         'rusis',
         'procentas',
         'galiojimo_pabaiga',
-        'turi_vartotojas_id'
+        'turi_vartotojas_id',
     ];
 
     protected $casts = [
-        'galiojimo_pabaiga' => 'date',
+        'rusis' => 'string',
         'procentas' => 'integer',
+        'galiojimo_pabaiga' => 'date',
     ];
 
-    // Relationships
-    public function vartotojas()
+    public function vartotojas(): BelongsTo
     {
-        return $this->belongsTo(Vartotojas::class, 'turi_vartojas_id');
-    }
-
-    // Helper methods
-    public function isLojalumas()
-    {
-        return $this->rusis === 'lojalumas';
-    }
-
-    public function isPakvietimas()
-    {
-        return $this->rusis === 'pakvietimas';
-    }
-
-    public function calculateDiscount($amount)
-    {
-        return $amount * ($this->procentas / 100);
-    }
-
-    public function applyDiscount($amount)
-    {
-        return $amount - $this->calculateDiscount($amount);
-    }
-
-    public function isExpired()
-    {
-        return $this->galiojimo_pabaiga < now();
-    }
-
-    public function isValid()
-    {
-        return !$this->isExpired();
+        return $this->belongsTo(Vartotojas::class, 'turi_vartotojas_id');
     }
 }

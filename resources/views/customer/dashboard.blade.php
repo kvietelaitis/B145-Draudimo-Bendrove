@@ -14,13 +14,15 @@
 
     <header class="flex justify-between items-center p-4 bg-white-500 text-black">
         <div>
-            <h1 class="text-4xl font-semibold">Draudimas.lt</h1>
+            <a href="{{ route('customer.dashboard') }}" class="text-4xl font-semibold hover:underline">
+                Draudimas.lt
+            </a>
         </div>
 
         <div class="flex items-center space-x-4">
-            <a href="{{route('accident_form')}}"
+            <a href="{{route('incidents.index')}}"
                 class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition">
-                Registruoti įvykį
+                Mano įvykiai
             </a>
 
             <form action="/logout" method="POST">

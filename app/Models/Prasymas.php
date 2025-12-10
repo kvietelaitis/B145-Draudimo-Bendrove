@@ -6,23 +6,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Pasiulymas extends Model
+class Prasymas extends Model
 {
     use HasFactory;
 
-    protected $table = 'pasiulymas';
+    protected $table = 'prasymas';
+
+    public $timestamps = false;
 
     protected $fillable = [
-        'koreguota_kaina',
+        'data',
         'bukle',
-        'sukurimo_data',
         'vartotojas_id',
     ];
 
     protected $casts = [
-        'koreguota_kaina' => 'double',
+        'data' => 'date',
         'bukle' => 'string',
-        'sukurimo_data' => 'date',
     ];
 
     public function vartotojas(): BelongsTo

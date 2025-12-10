@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\IncidentController;
 use App\Http\Controllers\LeaseCalculatorController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -15,18 +16,22 @@ Route::get('/', function () {
 
 Route::get('/admin/dashboard', function () {
     $users = \App\Models\Vartotojas::whereIn('role', ['darbuotojas', 'administratorius'])->get();
+
     return view('/admin/dashboard', compact('users'));
 })->middleware('check.admin');
 
 Route::get('/customer/dashboard', function () {
     $insurancePolicies = \App\Models\DraudimoPolisas::all();
     $years = Auth::user()->getYearsSinceLastAccident();
-    return view('customer.dashboard', compact(['insurancePolicies', 'years']));
-})->middleware('check.customer');
 
-Route::get('/accident_form', function () {
-    return view('/customer/accident_form');
-})->middleware('check.customer')->name('accident_form');
+    return view('customer.dashboard', compact(['insurancePolicies', 'years']));
+})->middleware('check.customer')->name('customer.dashboard');
+
+Route::middleware('check.customer')->group(function () {
+    Route::get('/incidents/create', [IncidentController::class, 'createForm'])->name('incidents.create');
+    Route::post('/create-incidents', [IncidentController::class, 'store']);
+    Route::get('/incidents/index', [IncidentController::class, 'index'])->name('incidents.index');
+});
 
 Route::get('/worker/dashboard', function () {
     return view('worker.dashboard');
