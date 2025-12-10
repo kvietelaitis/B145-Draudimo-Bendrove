@@ -6,6 +6,7 @@ use App\Models\IvykioNuotrauka;
 use App\Models\IvykioTipas;
 use App\Models\Ivykis;
 use App\Models\Sutartis;
+use App\Models\Vartotojas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -46,6 +47,12 @@ class IncidentController extends Controller
             'pranesimo_data' => now()->toDateString(),
             'bukle' => 'pateiktas',
         ]);
+
+        $user = Vartotojas::find(Auth::user()->id);
+
+        $user->paskutinio_incidento_data = $incident['ivykio_data'];
+
+        $user->save();
 
         if ($request->hasFile('photos')) {
             foreach ($request->file('photos') as $photo) {

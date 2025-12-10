@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\IncidentController;
 use App\Http\Controllers\LeaseCalculatorController;
+use App\Http\Controllers\PolicyController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,7 +18,7 @@ Route::get('/', function () {
 Route::get('/admin/dashboard', function () {
     $users = \App\Models\Vartotojas::whereIn('role', ['darbuotojas', 'administratorius'])->get();
 
-    return view('/admin/dashboard', compact('users'));
+    return view('admin.dashboard', compact('users'));
 })->middleware('check.admin');
 
 Route::get('/customer/dashboard', function () {
@@ -31,11 +32,17 @@ Route::middleware('check.customer')->group(function () {
     Route::get('/incidents/create', [IncidentController::class, 'createForm'])->name('incidents.create');
     Route::post('/create-incidents', [IncidentController::class, 'store']);
     Route::get('/incidents/index', [IncidentController::class, 'index'])->name('incidents.index');
+
+    Route::post('/choose-policy', [PolicyController::class, 'select']);
+    Route::get('/policies/{policy}/packages', [PolicyController::class, 'packages'])->name('policies.packages');
+    Route::post('/choose-package', [PolicyController::class, 'choosePackage']);
 });
 
-Route::get('/worker/dashboard', function () {
-    return view('worker.dashboard');
-})->middleware('check.worker');
+Route::middleware('check.worker')->group(function () {
+    Route::get('/worker/dashboard', function () {
+        return view('worker.dashboard');
+    });
+});
 
 Route::post('/register-user', [UserController::class, 'register']);
 Route::post('/logout', [UserController::class, 'logout']);
@@ -45,6 +52,3 @@ Route::post('/remove-worker', [AdminUserController::class, 'removeWorker']);
 Route::post('/calculate-lease', [LeaseCalculatorController::class, 'calculate']);
 Route::post('/declare-event', [UserController::class, 'reportAccident']);
 Route::post('/block-worker', [AdminUserController::class, 'blockWorker']);
-Route::post('/choose-policy', function () {
-    return view('wip');
-});

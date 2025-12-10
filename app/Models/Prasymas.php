@@ -18,6 +18,7 @@ class Prasymas extends Model
         'data',
         'bukle',
         'vartotojas_id',
+        'paketas_id',
     ];
 
     protected $casts = [
@@ -28,5 +29,10 @@ class Prasymas extends Model
     public function vartotojas(): BelongsTo
     {
         return $this->belongsTo(Vartotojas::class, 'vartotojas_id');
+    }
+
+    public function paketas(): BelongsTo
+    {
+        return $this->belongsTo(Paketas::class, 'paketas_id');
     }
 }

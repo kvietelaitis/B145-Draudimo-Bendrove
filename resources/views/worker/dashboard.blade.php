@@ -12,7 +12,9 @@
 <body class="bg-white text-gray-800 font-sans min-h-screen p-8">
     <header class="flex justify-between items-center p-4 bg-white-500 text-black mb-10">
         <div>
-            <h1 class="text-4xl font-semibold">Darbuotojų portalas</h1>
+            <a href="{{ route('worker.dashboard') }}" class="text-4xl font-semibold hover:underline">
+                Darbuotojų portalas
+            </a>
         </div>
 
         <form action="/logout" method="POST">
@@ -21,8 +23,11 @@
                 Atsijungti
             </button>
         </form>
-
     </header>
+
+    <div>
+
+    </div>
 </body>
 
 </html>

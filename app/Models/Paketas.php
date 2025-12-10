@@ -35,4 +35,9 @@ class Paketas extends Model
     {
         return $this->hasMany(Sutartis::class, 'paketas_id');
     }
+
+    public function getTotalPriceAttribute()
+    {
+        return $this->paslaugos->sum('kaina');
+    }
 }
