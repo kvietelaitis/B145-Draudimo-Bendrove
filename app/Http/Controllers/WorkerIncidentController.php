@@ -12,9 +12,20 @@ use Illuminate\Support\Facades\Auth;
 
 class WorkerIncidentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $incidents = Ivykis::with(['tipas', 'nuotraukos', 'vartotojas'])
+        $startQuery = Ivykis::with(['tipas', 'nuotraukos', 'vartotojas']);
+
+        if ($request->filled('name')) {
+            $name = $request->input('name');
+
+            $startQuery->whereHas('vartotojas', function ($q) use ($name) {
+                $q->where('vardas', 'like', "%$name%")
+                    ->orWhere('pavarde', 'like', "%$name%");
+            });
+        }
+
+        $incidents = $startQuery
             ->orderByDesc('pranesimo_data')
             ->paginate(10);
 

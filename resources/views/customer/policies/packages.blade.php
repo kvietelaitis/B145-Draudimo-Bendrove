@@ -10,7 +10,7 @@
 </head>
 
 <body class="bg-white text-gray-800 font-sans min-h-screen p-8 space-y-8">
-    <header class="flex justify-between items-center p-4 bg-white-500 text-black">
+    <header class="sticky top-0 z-50 flex justify-between items-center p-4 bg-white text-black">
         <div>
             <a href="{{ route('customer.dashboard') }}" class="text-4xl font-semibold hover:underline">
                 Draudimas.lt
@@ -27,38 +27,46 @@
         </div>
     </header>
 
-    <h1 class="text-2xl font-semibold mt-4">Paketo pasirinkimas: {{ $policy->pavadinimas }}</h1>
-    <p class="text-gray-600 mb-6">{{ $policy->apibudinimas ?? '' }}</p>
+    <div class="max-w-6xl mx-auto bg-white border border-gray-300 rounded-xl shadow-lg p-8 space-y-8">
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        @foreach($packages as $paketas)
-        <div class="border rounded p-4">
-            <div class="flex items-center space-x-4">
-                <h2 class="font-semibold text-lg">{{ $paketas->pavadinimas }}</h2>
+        <h1 class="text-2xl font-semibold mt-4">Paketo pasirinkimas: {{ $policy->pavadinimas }}</h1>
+        <p class="text-gray-600 mb-6">{{ $policy->apibudinimas ?? '' }}</p>
 
-                <p class="font-semibold mt-2">Kaina: {{ number_format($paketas->total_price ?? 0, 2) }} €</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            @foreach($packages as $paketas)
+            <div class="border rounded-lg p-6 bg-white shadow-sm flex flex-col h-full">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
+                    <h2 class="font-semibold text-lg mb-2 sm:mb-0">{{ $paketas->pavadinimas }}</h2>
+                    <p class="font-semibold mt-2">Kaina: {{ number_format($paketas->total_price ?? 0, 2) }} €</p>
+                </div>
+
+                <p class="text-sm text-gray-600 mb-2">{{ $paketas->aprasymas }}</p>
+
+                @if($paketas->paslaugos->count())
+                <div class="mb-4">
+                    <h3 class="font-medium text-gray-700 mb-1">Į paketą įeina:</h3>
+                    <ul class="text-sm list-disc list-inside text-gray-800">
+                        @foreach($paketas->paslaugos as $paslauga)
+                        <li>
+                            <span class="font-medium">{{ $paslauga->pavadinimas ?? $paslauga->apibudinimas }}</span>
+                            <span class="text-gray-500">— {{ number_format($paslauga->kaina ?? 0, 2) }} €</span>
+                        </li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
+
+                <div class="mt-auto pt-2">
+                    <form action="{{ route('customer.packages.form', $paketas->id) }}" method="GET">
+                        @csrf
+                        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">
+                            Pasirinkti paketą
+                        </button>
+                    </form>
+                </div>
             </div>
-
-            <p class="text-sm text-gray-600 mb-2">{{ $paketas->aprasymas }}</p>
-
-            @if($paketas->paslaugos->count())
-            <ul class="text-sm mb-4">
-                @foreach($paketas->paslaugos as $paslauga)
-                <li>&#8226; {{ $paslauga->pavadinimas ?? $paslauga->apibudinimas }} — {{ number_format($paslauga->kaina
-                    ?? 0, 2) }} €
-                </li>
-                @endforeach
-            </ul>
-            @endif
-
-            <form action="{{ route('customer.packages.form', $paketas->id) }}" method="GET">
-                @csrf
-                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                    Pasirinkti paketą
-                </button>
-            </form>
+            @endforeach
         </div>
-        @endforeach
     </div>
 </body>
 

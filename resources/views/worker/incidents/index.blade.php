@@ -36,6 +36,16 @@
         </div>
         @endif
 
+        <form action="{{ route('worker.incidents.index') }}" method="GET">
+            <input type="text" name="name" value="{{ request('name') }}" placeholder="Ieškoti pagal vardą ar pavardę"
+                class="border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-300">
+            <button type="submit"
+                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">Filtruoti</button>
+            @if(request('name'))
+            <a href="{{ route('worker.incidents.index') }}" class="text-sm text-gray-600 underline ml-2">Išvalyti</a>
+            @endif
+        </form>
+
         <div class="space-y-4">
             @forelse ($incidents as $incident)
             <div class="border border-gray-200 rounded-lg p-4 shadow-sm">

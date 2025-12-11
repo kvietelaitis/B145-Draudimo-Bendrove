@@ -5,37 +5,30 @@ namespace App\Http\Controllers;
 use App\Models\Vartotojas;
 use Illuminate\Http\Request;
 use Str;
-use Illuminate\Support\Facades\Auth;
 
 class AdminUserController extends Controller
 {
     public function index()
     {
         $users = Vartotojas::where('role', 'darbuotojas');
+
         return redirect('/admin/dashboard');
     }
 
     public function createWorker(Request $request)
     {
-        if (!$request->user() || $request->user()->role !== 'administratorius') {
-            return response()->json([
-                'status' => 0,
-                'msg' => "Unauthorized",
-            ], 403);
-        }
-
         $validated = $request->validate([
             'worker_name' => 'required',
             'worker_lastname' => 'required',
-            'role' => 'required'
+            'role' => 'required',
         ]);
 
-        $email = strtolower($validated['worker_name'] . '.' . $validated['worker_lastname'] . '@draudimas.lt');
+        $email = strtolower($validated['worker_name'].'.'.$validated['worker_lastname'].'@draudimas.lt');
 
         $originalEmail = $email;
         $counter = 1;
         while (Vartotojas::where('el_pastas', $email)->exists()) {
-            $email = str_replace('@draudimas.lt', $counter . '@draudimas.lt', $originalEmail);
+            $email = str_replace('@draudimas.lt', $counter.'@draudimas.lt', $originalEmail);
             $counter++;
         }
 
@@ -49,82 +42,36 @@ class AdminUserController extends Controller
             'role' => $validated['role'],
         ]);
 
-        return response()->json([
-            'status' => 1,
-            'msg' => "User created succesfully. One time password, save it.",
-            'pass' => $password
-        ]);
+        return back()->with('success', 'Darbuotojo slaptažodis: '.$password);
     }
 
     public function removeWorker(Request $request)
     {
-        if (!$request->user() || $request->user()->role !== 'administratorius') {
-            return response()->json([
-                'status' => 0,
-                'msg' => "Unauthorized",
-            ], 403);
-        }
+        $validated = $request->validate([
+            'worker_id' => ['required', 'integer', 'exists:vartotojas,id'],
+        ]);
 
-        $data = $request->all();
+        Vartotojas::where('id', $validated['worker_id'])->delete();
 
-        if ($data['id'] == 1) {
-            $data = [
-                'status' => '0',
-                'msg' => 'Cannot delete Main Admin user'
-            ];
-        } else {
-            $res = Vartotojas::where('id', $data['id'])->delete();
-
-            if ($res) {
-                $data = [
-                    'status' => '1',
-                    'msg' => 'success'
-                ];
-            } else {
-                $data = [
-                    'status' => '0',
-                    'msg' => 'Failed to delete user'
-                ];
-            }
-        }
-
-        return response()->json($data);
+        return back();
     }
 
     public function blockWorker(Request $request)
     {
-        if (!$request->user() || $request->user()->role !== 'administratorius') {
-            return response()->json([
-                'status' => 0,
-                'msg' => "Unauthorized",
-            ], 403);
-        }
+        $validated = $request->validate([
+            'worker_id' => ['required', 'integer', 'exists:vartotojas,id'],
+        ]);
 
-        $data = $request->all();
+        $worker = Vartotojas::where('id', $validated['worker_id'])->first();
 
-        if ($data['id'] == 1 || $data['id'] == $request->user()->id) {
-            $data = [
-                'status' => '0',
-                'msg' => 'Negalima užblokuoti šios paskyros.'
-            ];
+        if ($worker->uzblokuotas == false) {
+            $worker->uzblokuotas = true;
         } else {
-            $toBlock = Vartotojas::find($data['id'])->uzblokuotas == 0 ? 1 : 0;
-
-            $res = Vartotojas::where('id', $data['id'])->update(['uzblokuotas' => $toBlock]);
-
-            if ($res) {
-                $data = [
-                    'status' => '1',
-                    'msg' => 'success'
-                ];
-            } else {
-                $data = [
-                    'status' => '0',
-                    'msg' => 'Nepavyko užblokuoti paskyros.'
-                ];
-            }
+            $worker->uzblokuotas = false;
         }
 
-        return response()->json($data);
+        $worker->save();
+
+        return back();
     }
 }

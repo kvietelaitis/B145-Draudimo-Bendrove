@@ -65,7 +65,7 @@ Route::middleware('check.worker')->group(function () {
 Route::post('/register-user', [UserController::class, 'register']);
 Route::post('/logout', [UserController::class, 'logout']);
 Route::post('/login', [UserController::class, 'login']);
-Route::post('/register_worker', [AdminUserController::class, 'createWorker']);
+Route::post('/register-worker', [AdminUserController::class, 'createWorker']);
 Route::post('/remove-worker', [AdminUserController::class, 'removeWorker']);
 Route::post('/calculate-lease', [LeaseCalculatorController::class, 'calculate']);
 Route::post('/declare-event', [UserController::class, 'reportAccident']);

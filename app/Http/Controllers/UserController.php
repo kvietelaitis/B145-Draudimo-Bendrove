@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Nuolaida;
 use App\Models\Vartotojas;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
