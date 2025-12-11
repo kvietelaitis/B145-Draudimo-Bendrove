@@ -39,6 +39,8 @@
                     <button type="submit"
                         class="w-full bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition">Registruotis</button>
                 </form>
+                <br>
+                Turite paskyrą?<a href="/"> <u>Prisijunkite</u></a>
             </div>
         </div>
     </div>

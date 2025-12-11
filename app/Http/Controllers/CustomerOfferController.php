@@ -45,4 +45,13 @@ class CustomerOfferController extends Controller
 
         return redirect()->route('customer.dashboard')->with('success', 'Sutartis pasirašyta');
     }
+
+    public function details($offerId)
+    {
+        $offer = Pasiulymas::where('id', $offerId)
+            ->with('paketas', 'paketas.draudimoPolisas', 'paketas.paslaugos', 'vartotojas')
+            ->firstOrFail();
+
+        return view('customer.offers.details', compact('offer'));
+    }
 }

@@ -25,7 +25,7 @@
                 Mano pasiūlymai
             </a>
 
-            <a href="{{route('customer.offers.index')}}"
+            <a href="{{route('customer.contracts.index')}}"
                 class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition">
                 Mano sutartys
             </a>

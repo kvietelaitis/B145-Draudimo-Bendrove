@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Nuolaida;
 use App\Models\Pasiulymas;
 use App\Models\Prasymas;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -44,6 +45,7 @@ class WorkerRequestController extends Controller
                 $q->whereNull('galiojimo_pabaiga')
                     ->orWhere('galiojimo_pabaiga', '>=', now());
             })
+            ->whereNull('used_at')
             ->get();
 
         $best = $discountModels->sortByDesc('procentas')->first();
@@ -116,6 +118,11 @@ class WorkerRequestController extends Controller
             if ($selectedDiscount) {
                 $selectedDiscountId = $selectedDiscount->id;
                 $discountAmount = round($subtotal * ($selectedDiscount->procentas / 100.0), 2);
+
+                if ($selectedDiscount->rusis === 'pakvietimas') {
+                    $selectedDiscount->panaudojimo_laikas = Carbon::now()->format('Y-m-d');
+                    $selectedDiscount->save();
+                }
             }
         }
 

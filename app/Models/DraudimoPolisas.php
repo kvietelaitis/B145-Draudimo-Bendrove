@@ -17,11 +17,13 @@ class DraudimoPolisas extends Model
         'apibudinimas',
         'bazine_kaina',
         'salygos',
+        'form_fields',
     ];
 
     protected $casts = [
         'bazine_kaina' => 'double',
         'salygos' => 'array',
+        'form_fields' => 'array',
     ];
 
     public function paketai(): HasMany

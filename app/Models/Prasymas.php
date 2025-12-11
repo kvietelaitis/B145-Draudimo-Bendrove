@@ -19,11 +19,13 @@ class Prasymas extends Model
         'bukle',
         'vartotojas_id',
         'paketas_id',
+        'objekto_duomenys',
     ];
 
     protected $casts = [
         'data' => 'date',
         'bukle' => 'string',
+        'objekto_duomenys' => 'array',
     ];
 
     public function vartotojas(): BelongsTo

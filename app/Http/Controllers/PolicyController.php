@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DraudimoPolisas;
+use App\Models\Paketas;
 use App\Models\Prasymas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,17 +27,38 @@ class PolicyController extends Controller
         return view('customer.policies.packages', compact('policy', 'packages'));
     }
 
-    public function choosePackage(Request $request)
+    public function showForm($packageId)
+    {
+        $paketas = Paketas::with('draudimoPolisas')->findOrFail($packageId);
+
+        return view('customer.policies.form', compact('paketas'));
+    }
+
+    public function submit(Request $request)
     {
         $validated = $request->validate([
             'paketas_id' => ['required'],
         ]);
+
+        $paketas = Paketas::with('draudimoPolisas')->findOrFail($validated['paketas_id']);
+        $fields = $paketas->draudimoPolisas->form_fields ?? [];
+
+        $dynamicRules = [];
+        $customMessages = [];
+        foreach ($fields as $field) {
+            if (isset($field['required']) && $field['required']) {
+                $dynamicRules[$field['name']] = 'required';
+            }
+        }
+
+        $request->validate($dynamicRules);
 
         $application = Prasymas::create([
             'data' => now()->toDateString(),
             'bukle' => 'issiustas',
             'vartotojas_id' => Auth::user()->id,
             'paketas_id' => $validated['paketas_id'],
+            'objekto_duomenys' => $request->except(['_token', 'paketas_id']),
         ]);
 
         return redirect()->route('customer.dashboard')->with('success', 'Prašymas pateiktas');

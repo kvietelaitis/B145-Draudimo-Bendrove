@@ -16,6 +16,7 @@ class Nuolaida extends Model
         'rusis',
         'procentas',
         'galiojimo_pabaiga',
+        'panaudojimo_laikas',
         'turi_vartotojas_id',
     ];
 
@@ -23,6 +24,7 @@ class Nuolaida extends Model
         'rusis' => 'string',
         'procentas' => 'integer',
         'galiojimo_pabaiga' => 'date',
+        'panaudojimo_laikas' => 'date',
     ];
 
     public function vartotojas(): BelongsTo

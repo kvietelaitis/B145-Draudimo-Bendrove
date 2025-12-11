@@ -49,7 +49,7 @@
                     </div>
 
                     <div class="flex flex-col space-y-2 sm:self-center items-center">
-                        <form action="{{ '/wip' }}" method="GET">
+                        <form action="{{ route('customer.offers.details', $offer->id) }}" method="GET">
                             <button type="submit"
                                 class="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
                                 Detaliau

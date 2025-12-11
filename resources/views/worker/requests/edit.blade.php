@@ -11,12 +11,10 @@
 <body class="min-h-screen flex items-center justify-center bg-gray-100">
     <div class="max-w-3xl w-full mx-auto p-6 bg-white shadow rounded">
 
-        <!-- Single Form pointing to the makeOffer action -->
         <form id="price-edit-form" action="{{ '/worker/requests/make-offer' }}" method="POST"
             onsubmit="return confirm('Ar tikrai priimti šį prašymą?');">
             @csrf
 
-            <!-- Hidden ID for the request -->
             <input type="hidden" name="prasymas_id" value="{{ $prasymas->id }}" />
 
             <h1 class="text-2xl font-semibold mb-4">Koreguoti prašymą #{{ $prasymas->id }}</h1>
@@ -35,6 +33,18 @@
                     {{ $prasymas->paketas->pavadinimas ?? '-' }}</p>
             </div>
 
+            @if(!empty($prasymas->objekto_duomenys))
+            <div class="mb-4 border-t pt-4">
+                <h2 class="font-medium mb-2">Objekto duomenys</h2>
+                <div class="grid grid-cols-2 gap-2 text-sm">
+                    @foreach($prasymas->objekto_duomenys as $key => $value)
+                    <div class="text-gray-600 capitalize">{{ str_replace('_', ' ', $key) }}:</div>
+                    <div class="font-medium">{{ $value }}</div>
+                    @endforeach
+                </div>
+            </div>
+            @endif
+
             <div class="mb-4">
                 <h2 class="font-medium">Kainų suvestinė</h2>
 
@@ -43,7 +53,6 @@
                         <div class="flex justify-between items-center text-sm">
                             <label class="text-sm text-gray-700">Bazė:</label>
                             <div class="flex items-center space-x-3">
-                                <!-- This input will now be submitted directly -->
                                 <input type="number" step="0.01" name="base_price" id="base_price"
                                     value="{{ number_format($basePrice, 2, '.', '') }}"
                                     class="w-40 border rounded px-2 py-1 text-right" required />
@@ -62,7 +71,6 @@
 
                             <div class="flex items-center space-x-3">
                                 <input type="hidden" name="services[{{ $i }}][id]" value="{{ $s['id'] ?? '' }}" />
-                                <!-- These inputs will now be submitted directly -->
                                 <input type="number" step="0.01" name="services[{{ $i }}][price]"
                                     class="w-40 border rounded px-2 py-1 text-right service-price"
                                     value="{{ number_format($s['price'], 2, '.', '') }}" required />
@@ -89,7 +97,6 @@
                 <h3 class="font-medium">Taikoma nuolaida</h3>
 
                 <div class="mt-3 flex items-center justify-between">
-                    <!-- This select will now be submitted directly -->
                     <select id="selected_discount_id" name="selected_discount_id"
                         class="border rounded px-3 py-2 w-72 bg-white">
                         <option value="">(Nėra)</option>
@@ -119,7 +126,6 @@
                 </div>
             </div>
 
-            <!-- Buttons moved inside the main form -->
             <div class="flex space-x-3 justify-end mt-6">
                 <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
                     Priimti ir patvirtinti
@@ -139,7 +145,6 @@
 </html>
 
 <script>
-    // Simply recalculates visual totals. No need to sync hidden inputs anymore.
     function recalculateTotals() {
         const baseEl = document.getElementById('base_price');
         const base = baseEl ? parseFloat(baseEl.value || 0) : 0;

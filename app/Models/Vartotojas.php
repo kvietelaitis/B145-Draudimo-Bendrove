@@ -23,6 +23,7 @@ class Vartotojas extends Authenticatable
         'lojalumo_metai',
         'uzblokuotas',
         'paskutinio_incidento_data',
+        'referral_code',
     ];
 
     protected $hidden = [

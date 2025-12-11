@@ -38,7 +38,8 @@
                     <button type="submit"
                         class="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">Prisijungti</button>
                 </form>
-                <a href="{{ route('register')}}">Neturite paskyros? Prisiregistruokite</a>
+                <br>
+                Neturite paskyros?<a href="{{ route('register')}}"> <u>Prisiregistruokite</u></a>
             </div>
 
         </div>

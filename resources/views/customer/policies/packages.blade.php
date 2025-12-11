@@ -51,9 +51,8 @@
             </ul>
             @endif
 
-            <form action="/customer/choose-package" method="POST">
+            <form action="{{ route('customer.packages.form', $paketas->id) }}" method="GET">
                 @csrf
-                <input type="hidden" name="paketas_id" value="{{ $paketas->id }}">
                 <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
                     Pasirinkti paketą
                 </button>
