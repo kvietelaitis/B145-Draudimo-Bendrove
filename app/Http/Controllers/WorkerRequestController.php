@@ -6,6 +6,7 @@ use App\Models\Nuolaida;
 use App\Models\Pasiulymas;
 use App\Models\Prasymas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class WorkerRequestController extends Controller
 {
@@ -125,6 +126,7 @@ class WorkerRequestController extends Controller
             'bukle' => 'priimtas',
             'sukurimo_data' => now()->toDateString(),
             'vartotojas_id' => $prasymas->vartotojas->id,
+            'darbuotojas_id' => Auth::user()->id,
             'paketas_id' => $prasymas->paketas->id,
 
             'kainos_detales' => json_encode([

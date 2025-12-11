@@ -17,6 +17,7 @@ class Pasiulymas extends Model
         'bukle',
         'sukurimo_data',
         'vartotojas_id',
+        'darbuotojas_id',
         'paketas_id',
         'detales',
         'nuolaida_id',
@@ -28,6 +29,11 @@ class Pasiulymas extends Model
         'sukurimo_data' => 'date',
         'detales' => 'array',
     ];
+
+    public function darbuotojas()
+    {
+        return $this->belongsTo(Vartotojas::class, 'darbuotojas_id');
+    }
 
     public function vartotojas(): BelongsTo
     {

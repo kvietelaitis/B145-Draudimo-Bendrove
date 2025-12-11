@@ -57,7 +57,9 @@
                         </form>
                     </div>
                     <div class="flex flex-col space-y-2 sm:self-center items-center">
-                        <form action="{{ '/wip' }}" method="GET">
+                        <form action="/customer/offers/accept-offer" method="POST">
+                            @csrf
+                            <input type="hidden" name="offer_id" value="{{ $offer->id }}">
                             <button type="submit"
                                 class="w-full bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition">
                                 Priimti

@@ -42,6 +42,7 @@ Route::middleware('check.customer')->group(function () {
     Route::post('/customer/choose-package', [PolicyController::class, 'choosePackage']);
 
     Route::get('/customer/offers/index', [CustomerOfferController::class, 'index'])->name('customer.offers.index');
+    Route::post('/customer/offers/accept-offer', [CustomerOfferController::class, 'acceptOffer']);
 });
 
 Route::middleware('check.worker')->group(function () {
