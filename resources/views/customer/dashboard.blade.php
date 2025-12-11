@@ -20,7 +20,12 @@
         </div>
 
         <div class="flex items-center space-x-4">
-            <a href="{{route('incidents.index')}}"
+            <a href="{{route('customer.offers.index')}}"
+                class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition">
+                Mano pasiūlymai
+            </a>
+
+            <a href="{{route('customer.incidents.index')}}"
                 class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition">
                 Mano įvykiai
             </a>
@@ -49,9 +54,7 @@
                     </p>
                     @endif
                 </div>
-                <form action="/choose-policy" method="POST">
-                    @csrf
-                    <input type="hidden" name="policy_id" value="{{ $insurancePolicy->id }}">
+                <form action="{{ route('customer.policies.packages', $insurancePolicy->id) }}" method="GET">
                     <button type="submit"
                         class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition w-full">Pasirinkti</button>
                 </form>

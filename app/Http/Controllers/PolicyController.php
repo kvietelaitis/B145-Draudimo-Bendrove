@@ -15,7 +15,7 @@ class PolicyController extends Controller
             'policy_id' => ['required'],
         ]);
 
-        return redirect()->route('policies.packages', ['policy' => $request->input('policy_id')]);
+        return redirect()->route('customer.policies.packages', ['policy' => $request->input('policy_id')]);
     }
 
     public function packages($policyId)
@@ -23,7 +23,7 @@ class PolicyController extends Controller
         $policy = DraudimoPolisas::with('paketai.paslaugos')->findOrFail($policyId);
         $packages = $policy->paketai;
 
-        return view('policies.packages', compact('policy', 'packages'));
+        return view('customer.policies.packages', compact('policy', 'packages'));
     }
 
     public function choosePackage(Request $request)

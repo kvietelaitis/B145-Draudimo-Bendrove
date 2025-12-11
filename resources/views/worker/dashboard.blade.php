@@ -25,9 +25,40 @@
         </form>
     </header>
 
-    <div>
+    <main class="max-w-6xl mx-auto mt-8">
+        <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
+            <div class="space-y-6 px-60">
+                <h2 class="text-2xl font-medium">Placeholder nes bbzn</h2>
 
-    </div>
+                <div class="grid grid-cols-1 gap-6">
+                    <div
+                        class="border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition bg-white flex flex-col justify-between">
+                        <div class="mb-4">
+                            <h3 class="text-xl font-semibold mb-2">Klientų įvykiai</h3>
+                        </div>
+                        <form action="{{ route('worker.incidents.index') }}" method="GET">
+                            <button type="submit"
+                                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition w-full">
+                                Eiti
+                            </button>
+                        </form>
+                    </div>
+
+                    <div
+                        class="border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition bg-white flex flex-col justify-between">
+                        <div class="mb-4">
+                            <h3 class="text-xl font-semibold mb-2">Prašymai</h3>
+                        </div>
+                        <form action="{{ route('worker.requests.index') }}" method="GET">
+                            <button type="submit"
+                                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition w-full">
+                                Eiti
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+    </main>
 </body>
 
 </html>

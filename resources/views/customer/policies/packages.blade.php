@@ -51,7 +51,7 @@
             </ul>
             @endif
 
-            <form action="/choose-package" method="POST">
+            <form action="/customer/choose-package" method="POST">
                 @csrf
                 <input type="hidden" name="paketas_id" value="{{ $paketas->id }}">
                 <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">

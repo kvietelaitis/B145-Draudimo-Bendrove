@@ -38,6 +38,8 @@ class Paketas extends Model
 
     public function getTotalPriceAttribute()
     {
-        return $this->paslaugos->sum('kaina');
+        $totalPrice = $this->paslaugos->sum('kaina') + $this->draudimoPolisas->bazine_kaina;
+
+        return $totalPrice;
     }
 }

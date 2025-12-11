@@ -17,16 +17,25 @@ class Pasiulymas extends Model
         'bukle',
         'sukurimo_data',
         'vartotojas_id',
+        'paketas_id',
+        'detales',
+        'nuolaida_id',
     ];
 
     protected $casts = [
         'koreguota_kaina' => 'double',
         'bukle' => 'string',
         'sukurimo_data' => 'date',
+        'detales' => 'array',
     ];
 
     public function vartotojas(): BelongsTo
     {
         return $this->belongsTo(Vartotojas::class, 'vartotojas_id');
+    }
+
+    public function paketas(): BelongsTo
+    {
+        return $this->belongsTo(Paketas::class, 'paketas_id');
     }
 }

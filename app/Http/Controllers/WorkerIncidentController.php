@@ -10,16 +10,15 @@ use App\Models\Vartotojas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class IncidentController extends Controller
+class WorkerIncidentController extends Controller
 {
     public function index()
     {
-        $incidents = Ivykis::where('vartotojas_id', Auth::user()->id)
-            ->with(['tipas', 'nuotraukos'])
+        $incidents = Ivykis::with(['tipas', 'nuotraukos', 'vartotojas'])
             ->orderByDesc('pranesimo_data')
             ->paginate(10);
 
-        return view('incidents.index', compact('incidents'));
+        return view('worker.incidents.index', compact('incidents'));
     }
 
     public function createForm()
@@ -27,7 +26,7 @@ class IncidentController extends Controller
         $incidentTypes = IvykioTipas::all();
         $contracts = Sutartis::where('pasiraso_id', Auth::user()->id)->with('paketas')->get();
 
-        return view('incidents.create', compact('contracts', 'incidentTypes'));
+        return view('customer.incidents.create', compact('contracts', 'incidentTypes'));
     }
 
     public function store(Request $request)
@@ -66,6 +65,6 @@ class IncidentController extends Controller
             }
         }
 
-        return redirect()->route('incidents.index')->with('success', 'Įvykis sėkmingai registruotas');
+        return redirect()->route('customer.incidents.index')->with('success', 'Įvykis sėkmingai registruotas');
     }
 }
