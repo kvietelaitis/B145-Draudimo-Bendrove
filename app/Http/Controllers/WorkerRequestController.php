@@ -45,7 +45,7 @@ class WorkerRequestController extends Controller
                 $q->whereNull('galiojimo_pabaiga')
                     ->orWhere('galiojimo_pabaiga', '>=', now());
             })
-            ->whereNull('used_at')
+            ->whereNull('panaudojimo_laikas')
             ->get();
 
         $best = $discountModels->sortByDesc('procentas')->first();

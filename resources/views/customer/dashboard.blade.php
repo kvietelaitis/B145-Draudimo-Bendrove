@@ -133,6 +133,12 @@
 
             <div id="errorResult" class="hidden mt-4 text-red-600"></div>
         </div>
+
+        <div
+            class="border border-dashed border-blue-400 rounded-lg p-6 bg-blue-50 flex flex-col items-center justify-center mt-4">
+            <span class="text-lg font-semibold text-blue-700 mb-2">Jūsų pakvietimo kodas:</span>
+            <span class="text-2xl font-mono text-blue-900 tracking-widest">{{ $referralCode }}</span>
+        </div>
     </div>
 
     <script>

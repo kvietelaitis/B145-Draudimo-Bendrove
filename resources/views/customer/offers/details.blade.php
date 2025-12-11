@@ -10,7 +10,7 @@
 
 <body class="bg-white text-gray-800 font-sans min-h-screen p-8">
 
-    <header class="flex justify-between items-center p-4 bg-white-500 text-black">
+    <header class="sticky top-0 z-50 flex justify-between items-center p-4 bg-white text-black">
         <div>
             <a href="{{ route('customer.dashboard') }}" class="text-4xl font-semibold hover:underline">
                 Draudimas.lt
@@ -26,7 +26,7 @@
         </div>
     </header>
 
-    <div class="max-w-2xl mx-auto bg-white p-8 rounded shadow mt-8 space-y-6">
+    <div class="max-w-2xl mx-auto bg-white border border-gray-300 rounded-xl shadow-lg p-8 space-y-8">
         <h1 class="text-2xl font-bold mb-4">Pasiūlymo detalės</h1>
 
         <div class="mb-4">

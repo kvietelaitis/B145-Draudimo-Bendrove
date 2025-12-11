@@ -30,10 +30,19 @@ Route::get('/customer/dashboard', function () {
     $insurancePolicies = \App\Models\DraudimoPolisas::all();
     $years = Auth::user()->getYearsSinceLastAccident();
 
-    return view('customer.dashboard', compact(['insurancePolicies', 'years']));
+    $referralCode = Auth::user()->pakvietimo_kodas;
+
+    return view('customer.dashboard', compact(['insurancePolicies', 'years', 'referralCode']));
 })->middleware('check.customer')->name('customer.dashboard');
 
 Route::middleware('check.customer')->group(function () {
+
+    Route::post('/register-user', [UserController::class, 'register']);
+    Route::post('/logout', [UserController::class, 'logout']);
+    Route::post('/login', [UserController::class, 'login']);
+    Route::post('/calculate-lease', [LeaseCalculatorController::class, 'calculate']);
+    Route::post('/declare-event', [UserController::class, 'reportAccident']);
+
     Route::get('/customer/incidents/create', [CustomerIncidentController::class, 'createForm'])->name('customer.incidents.create');
     Route::post('/customer/create-incidents', [CustomerIncidentController::class, 'store']);
     Route::get('/customer/incidents/index', [CustomerIncidentController::class, 'index'])->name('customer.incidents.index');
@@ -62,14 +71,11 @@ Route::middleware('check.worker')->group(function () {
     Route::post('/worker/requests/make-offer', [WorkerRequestController::class, 'makeOffer']);
 });
 
-Route::post('/register-user', [UserController::class, 'register']);
-Route::post('/logout', [UserController::class, 'logout']);
-Route::post('/login', [UserController::class, 'login']);
-Route::post('/register-worker', [AdminUserController::class, 'createWorker']);
-Route::post('/remove-worker', [AdminUserController::class, 'removeWorker']);
-Route::post('/calculate-lease', [LeaseCalculatorController::class, 'calculate']);
-Route::post('/declare-event', [UserController::class, 'reportAccident']);
-Route::post('/block-worker', [AdminUserController::class, 'blockWorker']);
+Route::middleware('check.admin')->group(function () {
+    Route::post('/register-worker', [AdminUserController::class, 'createWorker']);
+    Route::post('/remove-worker', [AdminUserController::class, 'removeWorker']);
+    Route::post('/block-worker', [AdminUserController::class, 'blockWorker']);
+});
 
 Route::get('/wip', function () {
     return view('wip');

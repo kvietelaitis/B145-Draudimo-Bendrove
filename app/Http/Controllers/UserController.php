@@ -78,41 +78,51 @@ class UserController extends Controller
                 $years = Carbon::parse($lastIncidentDate)->diffInYears(Carbon::now());
             }
 
-            switch ($years) {
-                case 0:
-                    break;
-                case 1:
-                    Nuolaida::create([
-                        'rusis' => 'lojalumas',
-                        'procentas' => 2,
-                        'galiojimo_pabaiga' => Carbon::now()->addYear()->format('Y-m-d'),
-                        'turi_vartotojas_id' => $user->id,
-                    ]);
-                    break;
-                case 2:
-                    Nuolaida::create([
-                        'rusis' => 'lojalumas',
-                        'procentas' => 5,
-                        'galiojimo_pabaiga' => Carbon::now()->addYear()->format('Y-m-d'),
-                        'turi_vartotojas_id' => $user->id,
-                    ]);
-                    break;
-                case 3:
-                    Nuolaida::create([
-                        'rusis' => 'lojalumas',
-                        'procentas' => 10,
-                        'galiojimo_pabaiga' => Carbon::now()->addYear()->format('Y-m-d'),
-                        'turi_vartotojas_id' => $user->id,
-                    ]);
-                    break;
-                default:
-                    Nuolaida::create([
-                        'rusis' => 'lojalumas',
-                        'procentas' => 10,
-                        'galiojimo_pabaiga' => Carbon::now()->addYear()->format('Y-m-d'),
-                        'turi_vartotojas_id' => $user->id,
-                    ]);
-                    break;
+            $existing = Nuolaida::where('turi_vartotojas_id', $user->id)
+                ->where('rusis', 'lojalumas')
+                ->where(function ($q) {
+                    $q->whereNull('galiojimo_pabaiga')
+                        ->orWhere('galiojimo_pabaiga', '>=', now());
+                })
+                ->first();
+
+            if (! $existing && $years > 0) {
+                switch ($years) {
+                    case 0:
+                        break;
+                    case 1:
+                        Nuolaida::create([
+                            'rusis' => 'lojalumas',
+                            'procentas' => 2,
+                            'galiojimo_pabaiga' => Carbon::now()->addYear()->format('Y-m-d'),
+                            'turi_vartotojas_id' => $user->id,
+                        ]);
+                        break;
+                    case 2:
+                        Nuolaida::create([
+                            'rusis' => 'lojalumas',
+                            'procentas' => 5,
+                            'galiojimo_pabaiga' => Carbon::now()->addYear()->format('Y-m-d'),
+                            'turi_vartotojas_id' => $user->id,
+                        ]);
+                        break;
+                    case 3:
+                        Nuolaida::create([
+                            'rusis' => 'lojalumas',
+                            'procentas' => 10,
+                            'galiojimo_pabaiga' => Carbon::now()->addYear()->format('Y-m-d'),
+                            'turi_vartotojas_id' => $user->id,
+                        ]);
+                        break;
+                    default:
+                        Nuolaida::create([
+                            'rusis' => 'lojalumas',
+                            'procentas' => 10,
+                            'galiojimo_pabaiga' => Carbon::now()->addYear()->format('Y-m-d'),
+                            'turi_vartotojas_id' => $user->id,
+                        ]);
+                        break;
+                }
             }
 
             return redirect('/');

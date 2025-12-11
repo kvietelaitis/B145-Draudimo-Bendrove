@@ -7,28 +7,23 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-white text-gray-800 font-sans min-h-screen p-8">
-
-    <header class="flex justify-between items-center p-4 bg-white-500 text-black">
+<body class="bg-white text-gray-800 font-sans min-h-screen p-8 space-y-8">
+    <header class="sticky top-0 z-50 flex justify-between items-center p-4 bg-white text-black">
         <div>
             <a href="{{ route('worker.dashboard') }}" class="text-4xl font-semibold hover:underline">
-                Darbuotojų Portalas
+                Darbuotojų portalas
             </a>
         </div>
-
-        <div class="flex items-center space-x-4">
-            <form action="/logout" method="POST">
-                @csrf
-                <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">
-                    Atsijungti
-                </button>
-            </form>
-        </div>
+        <form action="/logout" method="POST">
+            @csrf
+            <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">
+                Atsijungti
+            </button>
+        </form>
     </header>
-
-    <main class="max-w-6xl mx-auto mt-8">
-        <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
-            <div class="space-y-4">
+    <main>
+        <div class="max-w-2xl mx-auto bg-white border border-gray-300 rounded-xl shadow-lg p-8 space-y-8">
+            <div class="space-y-6">
                 <h1 class="text-2xl font-medium pb-5">Vartotojų prašymai</h1>
 
                 @forelse ($requests as $request)
@@ -39,7 +34,7 @@
                             $request->vartotojas->pavarde }}</p>
                         <p><strong>Polisas:</strong> {{ $request->paketas->draudimoPolisas->pavadinimas }}</p>
                         <p><strong>Data:</strong> {{ $request->data }}</p>
-                        <p><strong>Būkle:</strong> {{ $request->bukle }}</p>
+                        <p><strong>Būkle:</strong> {{ ucfirst($request->bukle) }}</p>
                     </div>
 
                     <div class="flex flex-col space-y-2 sm:self-center items-center">
