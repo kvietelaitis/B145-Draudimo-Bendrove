@@ -45,17 +45,21 @@
                         <p><strong>Polisas:</strong> {{ $contract->paketas->draudimoPolisas->pavadinimas}}</p>
                         <p><strong>Pradžios data:</strong> {{ $contract->isigaliojimo_data }}</p>
                         <p><strong>Galiojimo pabaigos data:</strong> {{ $contract->galiojimo_pabaigos_data }}</p>
-                    </div>
+                        <p><strong>Būklė:</strong> {{ $contract->bukle }}</p>
 
+                    </div>
+                    @if ($contract->bukle !== 'atsaukta')
                     <div class="flex flex-col space-y-2 sm:self-center items-center">
-                        <form action="/wip" method="POST">
+                        <form action="/customer/contracts/cancel" method="POST">
                             @csrf
+                            <input type="hidden" name="contract_id" value="{{ $contract->id }}">
                             <button type="submit"
                                 class="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">
                                 Atšaukti
                             </button>
                         </form>
                     </div>
+                    @endif
                 </div>
                 @empty
                 <p class="text-gray-600">Nėra jokių sutarčių.</p>

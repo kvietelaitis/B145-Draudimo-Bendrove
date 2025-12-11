@@ -42,13 +42,14 @@ Route::middleware('check.customer')->group(function () {
     Route::get('/customer/policies/{policy}/packages', [PolicyController::class, 'packages'])->name('customer.policies.packages');
     Route::post('/customer/policies/submit', [PolicyController::class, 'submit']);
     Route::get('/customer/packages/{package}/form', [PolicyController::class, 'showForm'])->name('customer.packages.form');
+    Route::post('/customer/packages/submit', [PolicyController::class, 'submit']);
 
     Route::get('/customer/offers/index', [CustomerOfferController::class, 'index'])->name('customer.offers.index');
     Route::get('/customer/offers/{offer}/details', [CustomerOfferController::class, 'details'])->name('customer.offers.details');
     Route::post('/customer/offers/accept-offer', [CustomerOfferController::class, 'acceptOffer']);
 
     Route::get('/customer/contracts/index', [CustomerContractController::class, 'index'])->name('customer.contracts.index');
-    Route::post('/customer/packages/submit', [PolicyController::class, 'submit']);
+    Route::post('/customer/contracts/cancel', [CustomerContractController::class, 'cancel']);
 });
 
 Route::middleware('check.worker')->group(function () {
