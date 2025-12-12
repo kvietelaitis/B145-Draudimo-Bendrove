@@ -51,7 +51,7 @@ class Vartotojas extends Authenticatable
     {
         $data = $this->paskutinio_incidento_data ?: $this->created_at;
 
-        return Carbon::parse($data)->diffInYears(now());
+        return round(Carbon::parse($data)->diffInYears(now()));
     }
 
     public function ivykiai(): HasMany

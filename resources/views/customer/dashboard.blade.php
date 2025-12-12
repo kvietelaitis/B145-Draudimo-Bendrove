@@ -74,36 +74,41 @@
 
         <div class="border border-gray-200 rounded-lg p-6 shadow-sm space-y-4">
             <h2 class="text-2xl font-medium">Lizingo skaičiuoklė:</h2>
-            <form id="lease-calculation-form" class="space-y-4">
+            <form action="/calculate-lease" method="POST" id="lease-calculation-form" class="space-y-4">
                 @csrf
+
+                <input type="hidden" name="years_since_accident" value="{{ floor($years) }}">
+
                 <div>
                     <label class="block mb-1 font-medium" for="category">Pasirinkite kategoriją:</label>
                     <select name="category" id="category"
                         class="border border-gray-300 rounded px-3 py-2 w-full focus:ring-2 focus:ring-blue-300">
                         <option value="--">--</option>
-                        <option value="car">Automobilis</option>
-                        <option value="machinery">Technika</option>
-                        <option value="electronics">Elektronika</option>
-                        <option value="furniture">Baldai</option>
-                        <option value="housing">Būstas</option>
+                        <option value="car" {{ old('category')=='car' ? 'selected' : '' }}>Automobilis</option>
+                        <option value="machinery" {{ old('category')=='machinery' ? 'selected' : '' }}>Technika</option>
+                        <option value="electronics" {{ old('category')=='electronics' ? 'selected' : '' }}>Elektronika
+                        </option>
+                        <option value="furniture" {{ old('category')=='furniture' ? 'selected' : '' }}>Baldai</option>
+                        <option value="housing" {{ old('category')=='housing' ? 'selected' : '' }}>Būstas</option>
                     </select>
                 </div>
 
                 <div>
                     <label class="block mb-1 font-medium" for="initial_cost">Įveskite pradinę kainą:</label>
-                    <input type="number" name="initial_cost" id="initial_cost"
+                    <input type="number" name="initial_cost" id="initial_cost" value="{{ old('initial_cost') }}"
                         class="border border-gray-300 rounded px-3 py-2 w-full focus:ring-2 focus:ring-blue-300">
                 </div>
 
                 <div>
                     <label class="block mb-1 font-medium" for="market_value">Įveskite rinkos kainą:</label>
-                    <input type="number" name="market_value" id="market_value"
+                    <input type="number" name="market_value" id="market_value" value="{{ old('market_value') }}"
                         class="border border-gray-300 rounded px-3 py-2 w-full focus:ring-2 focus:ring-blue-300">
                 </div>
 
                 <div>
                     <label class="block mb-1 font-medium" for="remaining_lease">Įveskite lizingo likutį:</label>
                     <input type="number" name="remaining_lease" id="remaining_lease"
+                        value="{{ old('remaining_lease') }}"
                         class="border border-gray-300 rounded px-3 py-2 w-full focus:ring-2 focus:ring-blue-300">
                 </div>
 
@@ -112,9 +117,11 @@
                     <select name="insurance_type" id="insurance_type"
                         class="border border-gray-300 rounded px-3 py-2 w-full focus:ring-2 focus:ring-blue-300">
                         <option value="--">--</option>
-                        <option value="full">Pilnas</option>
-                        <option value="replacement">Pakeitimas</option>
-                        <option value="damage">Žala/Remontas</option>
+                        <option value="full" {{ old('insurance_type')=='full' ? 'selected' : '' }}>Pilnas</option>
+                        <option value="replacement" {{ old('insurance_type')=='replacement' ? 'selected' : '' }}>
+                            Pakeitimas</option>
+                        <option value="damage" {{ old('insurance_type')=='damage' ? 'selected' : '' }}>Žala/Remontas
+                        </option>
                     </select>
                 </div>
 
@@ -122,75 +129,38 @@
                     class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition">Apskaičiuoti</button>
             </form>
 
-            <div id="calculationResult" class="hidden mt-4 p-4 border border-gray-200 rounded bg-gray-50">
+            @if(session('calculation_results'))
+            <div class="mt-4 p-4 border border-gray-200 rounded bg-gray-50">
                 <h3 class="font-medium text-lg mb-2">Rezultatai</h3>
-                <p><strong>Mėnesinė įmoka:</strong> €<span id="baseCost">0</span></p>
-                <p><strong>Metinė įmoka:</strong> €<span id="annualCost">0</span></p>
+                <p><strong>Mėnesinė įmoka:</strong> €{{ session('calculation_results')['baseCost'] }}</p>
+                <p><strong>Metinė įmoka:</strong> €{{ session('calculation_results')['annualCost'] }}</p>
                 @if($years >= 1)
-                <p><strong>Mėnesinė įmoka (Su nuolaida):</strong> €<span id="discountedBase">0</span></p>
+                <p><strong>Mėnesinė įmoka (Su nuolaida):</strong> €{{ session('calculation_results')['discountedBase']
+                    }}</p>
                 @endif
             </div>
+            @endif
 
-            <div id="errorResult" class="hidden mt-4 text-red-600"></div>
+            <!-- Display Validation Errors -->
+            @if ($errors->any())
+            <div class="mt-4 text-red-600 p-4 border border-red-200 rounded bg-red-50">
+                <ul class="list-disc list-inside">
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
         </div>
 
-        <div
-            class="border border-dashed border-blue-400 rounded-lg p-6 bg-blue-50 flex flex-col items-center justify-center mt-4">
-            <span class="text-lg font-semibold text-blue-700 mb-2">Jūsų pakvietimo kodas:</span>
-            <span class="text-2xl font-mono text-blue-900 tracking-widest">{{ $referralCode }}</span>
-        </div>
+        <div id="errorResult" class="hidden mt-4 text-red-600"></div>
     </div>
 
-    <script>
-        document.getElementById('lease-calculation-form').addEventListener('submit', async function (e) {
-            e.preventDefault();
-
-            const form = this;
-
-            const calculationData = {
-                category: form.querySelector('#category').value,
-                initial_cost: form.querySelector('#initial_cost').value,
-                market_value: form.querySelector('#market_value').value,
-                remaining_lease: form.querySelector('#remaining_lease').value,
-                insurance_type: form.querySelector('#insurance_type').value,
-                years_since_accident: JSON.stringify({{floor($years)}})
-            }
-
-            const resultDiv = document.getElementById('calculationResult');
-            const errorDiv = document.getElementById('errorResult');
-
-            fetch('/calculate-lease', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify(calculationData)
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.status == 1 || data.final_cost !== undefined) {
-                        document.getElementById('baseCost').textContent = data.baseCost.toFixed(2);
-                        document.getElementById('annualCost').textContent = data.annualCost.toFixed(2);
-                        if ({{$years}} >= 1) {
-                            document.getElementById('discountedBase').textContent = data.discountedBase.toFixed(2);
-                        }
-
-                        resultDiv.classList.remove('hidden');
-                        errorDiv.classList.add('hidden');
-                    } else if (data.errors) {
-                        let errorMessage = '';
-                        for (let key in data.errors) {
-                            errorMessage += data.errors[key].join('<br>') + '<br>';
-                        }
-                        errorDiv.innerHTML = errorMessage;
-                        errorDiv.classList.remove('hidden');
-                    } else {
-                        alert('Calculation failed');
-                    }
-                });
-        });
-    </script>
+    <div
+        class="border border-dashed border-blue-400 rounded-lg p-6 bg-blue-50 flex flex-col items-center justify-center mt-4">
+        <span class="text-lg font-semibold text-blue-700 mb-2">Jūsų pakvietimo kodas:</span>
+        <span class="text-2xl font-mono text-blue-900 tracking-widest">{{ $referralCode }}</span>
+    </div>
 
 </body>
 

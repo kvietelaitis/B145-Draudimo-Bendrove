@@ -14,11 +14,11 @@ class UserController extends Controller
     public function register(Request $request)
     {
         $incomingFields = $request->validate([
-            'vardas' => ['required'],
-            'pavarde' => ['required'],
-            'el_pastas' => ['required', Rule::unique('vartotojas', 'el_pastas')],
-            'slaptazodis' => ['required', 'max:20', 'min:8'],
-            'referral_code' => ['nullable', 'exists:vartotojas,referral_code'],
+            'vardas' => ['required', 'string', 'max:50'],
+            'pavarde' => ['required', 'string', 'max:50'],
+            'el_pastas' => ['required', 'email', Rule::unique('vartotojas', 'el_pastas')],
+            'slaptazodis' => ['required', 'string', 'min:8', 'max:20'],
+            'pakvietimo_kodas' => ['nullable', 'exists:vartotojas,pakvietimo_kodas'],
         ], [
             'vardas.required' => 'Vardo laukas yra privalomas.',
             'pavarde.required' => 'Pavardės laukas yra privalomas.',
@@ -31,9 +31,9 @@ class UserController extends Controller
 
         $incomingFields['slaptazodis'] = bcrypt($incomingFields['slaptazodis']);
 
-        $referralCode = $incomingFields['referral_code'];
+        $referralCode = $incomingFields['pakvietimo_kodas'];
         $generatedCode = strtoupper(bin2hex(random_bytes(4)));
-        $incomingFields['referral_code'] = $generatedCode;
+        $incomingFields['pakvietimo_kodas'] = $generatedCode;
 
         try {
             $user = Vartotojas::create($incomingFields);
@@ -42,7 +42,7 @@ class UserController extends Controller
         }
 
         if (! empty($referralCode)) {
-            $referrer = Vartotojas::where('referral_code', $referralCode)->first();
+            $referrer = Vartotojas::where('pakvietimo_kodas', $referralCode)->first();
 
             if ($referrer) {
                 Nuolaida::create([
@@ -62,8 +62,8 @@ class UserController extends Controller
     public function login(Request $request)
     {
         $incomingFields = $request->validate([
-            'loginemail' => ['required'],
-            'loginpassword' => ['required'],
+            'loginemail' => ['required', 'string', 'email'],
+            'loginpassword' => ['required', 'string'],
         ]);
 
         if (Auth::attempt(['el_pastas' => $incomingFields['loginemail'], 'password' => $incomingFields['loginpassword']])) {

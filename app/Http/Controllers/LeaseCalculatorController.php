@@ -17,7 +17,7 @@ class LeaseCalculatorController extends Controller
             'market_value' => 'required|numeric|min:500|max:500000',
             'remaining_lease' => 'required|numeric|min:500|max:500000',
             'insurance_type' => 'required|in:full,replacement,damage',
-            'years_since_accident' => 'required'
+            'years_since_accident' => 'required',
         ]);
 
         $insuranceRates = [
@@ -46,11 +46,12 @@ class LeaseCalculatorController extends Controller
         $monthlyCost = $annualCost / 12;
         $discountedMonthlyCost = $discountedAnnualCost / 12;
 
-        return response()->json([
-            'status' => 1,
-            'baseCost' => round($monthlyCost, 2),
-            'annualCost' => round($annualCost, 2),
-            'discountedBase' => round($discountedMonthlyCost, 2),
-        ]);
+        return back()->with([
+            'calculation_results' => [
+                'baseCost' => round($monthlyCost, 2),
+                'annualCost' => round($annualCost, 2),
+                'discountedBase' => round($discountedMonthlyCost, 2),
+            ],
+        ])->withInput(); // Keeps the form filled
     }
 }

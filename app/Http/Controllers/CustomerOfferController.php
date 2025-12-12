@@ -23,7 +23,7 @@ class CustomerOfferController extends Controller
     public function acceptOffer(Request $request)
     {
         $validated = $request->validate([
-            'offer_id' => ['required'],
+            'offer_id' => ['required', 'integer', 'exists:pasiulymas,id'],
         ]);
 
         $offer = Pasiulymas::where('id', $validated['offer_id'])

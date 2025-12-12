@@ -18,8 +18,8 @@ class AdminUserController extends Controller
     public function createWorker(Request $request)
     {
         $validated = $request->validate([
-            'worker_name' => 'required',
-            'worker_lastname' => 'required',
+            'worker_name' => 'required|string|max:50',
+            'worker_lastname' => 'required|string|max:50',
             'role' => 'required',
         ]);
 

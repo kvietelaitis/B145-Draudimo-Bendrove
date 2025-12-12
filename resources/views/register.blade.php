@@ -36,6 +36,8 @@
                         class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-300">
                     <input name="slaptazodis" type="password" placeholder="Slaptažodis"
                         class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-300">
+                    <input name="pakvietimo_kodas" type="text" placeholder="Pakvietimo Kodas"
+                        class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-300">
                     <button type="submit"
                         class="w-full bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition">Registruotis</button>
                 </form>

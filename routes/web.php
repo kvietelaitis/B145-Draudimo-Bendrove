@@ -36,11 +36,6 @@ Route::get('/customer/dashboard', function () {
 })->middleware('check.customer')->name('customer.dashboard');
 
 Route::middleware('check.customer')->group(function () {
-
-    Route::post('/register-user', [UserController::class, 'register']);
-    Route::post('/logout', [UserController::class, 'logout']);
-    Route::post('/login', [UserController::class, 'login']);
-    Route::post('/calculate-lease', [LeaseCalculatorController::class, 'calculate']);
     Route::post('/declare-event', [UserController::class, 'reportAccident']);
 
     Route::get('/customer/incidents/create', [CustomerIncidentController::class, 'createForm'])->name('customer.incidents.create');
@@ -76,6 +71,11 @@ Route::middleware('check.admin')->group(function () {
     Route::post('/remove-worker', [AdminUserController::class, 'removeWorker']);
     Route::post('/block-worker', [AdminUserController::class, 'blockWorker']);
 });
+
+Route::post('/register-user', [UserController::class, 'register']);
+Route::post('/logout', [UserController::class, 'logout']);
+Route::post('/login', [UserController::class, 'login']);
+Route::post('/calculate-lease', [LeaseCalculatorController::class, 'calculate']);
 
 Route::get('/wip', function () {
     return view('wip');

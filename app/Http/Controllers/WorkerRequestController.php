@@ -84,10 +84,10 @@ class WorkerRequestController extends Controller
     public function makeOffer(Request $request)
     {
         $data = $request->validate([
-            'prasymas_id' => ['required', 'integer'],
+            'prasymas_id' => ['required', 'integer', 'min:1', 'exists:prasymas,id'],
             'base_price' => ['required', 'numeric', 'min:0'],
             'services' => ['nullable', 'array'],
-            'services.*.id' => ['required', 'integer'],
+            'services.*.id' => ['required', 'integer', 'min:1'],
             'services.*.price' => ['required', 'numeric', 'min:0'],
             'selected_discount_id' => ['nullable', 'integer', 'exists:nuolaida,id'],
         ]);

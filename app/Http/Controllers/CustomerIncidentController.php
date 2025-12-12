@@ -33,10 +33,11 @@ class CustomerIncidentController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'incident_type' => ['required'],
-            'insurance_contract' => ['required'],
-            'incident_date' => ['required'],
-            'incident_description' => ['required'],
+            'incident_type' => ['required', 'integer', 'exists:ivykio_tipas,id'],
+            'insurance_contract' => ['required', 'integer', 'exists:sutartis,id'],
+            'incident_date' => ['required', 'date'],
+            'incident_description' => ['required', 'string', 'max:1000'],
+            'photos.*' => ['nullable', 'image', 'max:5120'], // each photo max 5MB
         ]);
 
         $incident = Ivykis::create([

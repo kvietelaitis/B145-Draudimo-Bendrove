@@ -13,7 +13,7 @@ class PolicyController extends Controller
     public function select(Request $request)
     {
         $request->validate([
-            'policy_id' => ['required'],
+            'policy_id' => ['required', 'integer', 'exists:draudimoPolisas,id'],
         ]);
 
         return redirect()->route('customer.policies.packages', ['policy' => $request->input('policy_id')]);
@@ -37,7 +37,7 @@ class PolicyController extends Controller
     public function submit(Request $request)
     {
         $validated = $request->validate([
-            'paketas_id' => ['required'],
+            'paketas_id' => ['required', 'integer', 'exists:paketas,id'],
         ]);
 
         $paketas = Paketas::with('draudimoPolisas')->findOrFail($validated['paketas_id']);
@@ -46,9 +46,42 @@ class PolicyController extends Controller
         $dynamicRules = [];
         $customMessages = [];
         foreach ($fields as $field) {
+            $rules = [];
             if (isset($field['required']) && $field['required']) {
-                $dynamicRules[$field['name']] = 'required';
+                $rules[] = 'required';
+            } else {
+                $rules[] = 'nullable';
             }
+
+            // Add type-specific rules
+            if (isset($field['type'])) {
+                switch ($field['type']) {
+                    case 'string':
+                        $rules[] = 'string';
+                        if (isset($field['max'])) {
+                            $rules[] = 'max:'.$field['max'];
+                        }
+                        break;
+                    case 'integer':
+                        $rules[] = 'integer';
+                        if (isset($field['min'])) {
+                            $rules[] = 'min:'.$field['min'];
+                        }
+                        if (isset($field['max'])) {
+                            $rules[] = 'max:'.$field['max'];
+                        }
+                        break;
+                    case 'date':
+                        $rules[] = 'date';
+                        break;
+                    case 'email':
+                        $rules[] = 'email';
+                        break;
+                        // Add more types as needed
+                }
+            }
+
+            $dynamicRules[$field['name']] = $rules;
         }
 
         $request->validate($dynamicRules);
